@@ -1,13 +1,16 @@
 import bcrypt from 'bcrypt';
 import User from '../models/UserModel.js';
 import jwt from 'jsonwebtoken';
+import validator from 'validator';
 
 
+//*************** Register User *******************/
 export const register = async ({ username, email, password, profilePicture }) => {
     if (!username || !email || !password) {
         return { data: 'All fields are required', statusCode: 400 };
     }
 
+    // Validate inputs
     if (!validator.isStrongPassword(password, { minLength: 6 })) {
         return { data: 'Password must be at least 6 characters long and contain a mix of letters, numbers, and symbols', statusCode: 400 };
     }
@@ -45,6 +48,43 @@ export const register = async ({ username, email, password, profilePicture }) =>
     return { data: generateToken({ username, email }), statusCode: 201 };
     
 };
+
+//*************** Login User *******************/
+export const login = async ({ email, password }) => {
+    if (!email || !password) {
+        return { data: 'All fields are required', statusCode: 400 };
+    }
+
+    const findUser = await User.findOne({ email });
+    if (!findUser) {
+        return { data: 'User does not exist!', statusCode: 404 };
+    }
+
+    const isPasswordCorrect = await bcrypt.compare(password, findUser.password);
+    
+    const token = generateToken({
+        id: findUser._id,
+        email, 
+        username: findUser.username,
+        profilePicture: findUser.profilePicture || '',
+    });
+
+    if (isPasswordCorrect) {
+        return {   
+            data: {
+                token,
+                user: {id: findUser._id,
+                email, 
+                username: findUser.username,
+                profilePicture: findUser.profilePicture || '',}
+            },
+            statusCode: 200 };
+    }
+    
+
+    return { data: 'Invalid password', statusCode: 400 };
+    
+}
 
 //*************** Generate Token *******************/
 const generateToken = (data) => {

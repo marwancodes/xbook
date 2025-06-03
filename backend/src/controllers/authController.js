@@ -1,4 +1,4 @@
-import { register } from "../services/userService.js";
+import { login, register } from "../services/userService.js";
 
 
 export const registerUser = async (req, res) => {
@@ -18,6 +18,14 @@ export const registerUser = async (req, res) => {
 }
 
 export const loginUser = async (req, res) => {
-    res.send('Login Page');
+    try {
+        const { email, password } = req.body;
+        const { data, statusCode } = await login({ email, password });
+        console.log(data);
+        res.status(statusCode).json(data);  
+    } catch (error) {
+        console.error('Error in login route:', error);
+        res.status(500).send({ error: 'Internal server error' });
+    }
 }
 
