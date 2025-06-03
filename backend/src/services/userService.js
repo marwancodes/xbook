@@ -8,15 +8,15 @@ export const register = async ({ username, email, password, profilePicture }) =>
         return { data: 'All fields are required', statusCode: 400 };
     }
 
-    if (password.length < 6) {
-        return { data: 'Password must be at least 6 characters long', statusCode: 400 };
+    if (!validator.isStrongPassword(password, { minLength: 6 })) {
+        return { data: 'Password must be at least 6 characters long and contain a mix of letters, numbers, and symbols', statusCode: 400 };
     }
 
-    if (!/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(email)) {
+    if (!validator.isEmail(email)) {
         return { data: 'Invalid email format', statusCode: 400 };
     }
 
-    if (username.length < 3 || username.length > 20) {
+    if (!validator.isLength(username, { min: 3, max: 20 })) {
         return { data: 'Username must be between 3 and 20 characters', statusCode: 400 };
     }
 
