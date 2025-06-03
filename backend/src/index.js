@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import authRoutes from './routes/authRoutes.js';
+import bookRoutes from './routes/bookRoutes.js';
 import { connectDB } from './config/db.js';
 
 
@@ -15,7 +16,9 @@ app.use(express.json()); // Parse JSON bodies
 
 
 app.use("/api/auth", authRoutes);
+app.use("/api/books", bookRoutes)
 
+// Basic route for testing
 app.get('/', (req, res) => {
   res.send('Hello, World!');
 });
