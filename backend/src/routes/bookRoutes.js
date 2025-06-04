@@ -4,6 +4,8 @@ import protectRoute from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 
-router.post('/', protectRoute, createBook);
+router.get('/', createBook);
+// router.get('/', protectRoute, getAllBooks);
+
 
 export default router;

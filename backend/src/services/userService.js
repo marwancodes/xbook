@@ -57,27 +57,18 @@ export const login = async ({ email, password }) => {
 
     const findUser = await User.findOne({ email });
     if (!findUser) {
-        return { data: 'User does not exist!', statusCode: 404 };
+        return { data: 'Email not found', statusCode: 404 };
     }
 
-    const isPasswordCorrect = await bcrypt.compare(password, findUser.password);
+    const passwordMatch = await bcrypt.compare(password, findUser.password);
     
-    const token = generateToken({
-        id: findUser._id,
-        email, 
-        username: findUser.username,
-        profilePicture: findUser.profilePicture || '',
-    });
-
-    if (isPasswordCorrect) {
-        return {   
-            data: {
-                token,
-                user: {id: findUser._id,
+    if (passwordMatch) {
+        return { 
+                data: generateToken({
                 email, 
                 username: findUser.username,
-                profilePicture: findUser.profilePicture || '',}
-            },
+                profilePicture: findUser.profilePicture || '',
+            }),
             statusCode: 200 };
     }
     

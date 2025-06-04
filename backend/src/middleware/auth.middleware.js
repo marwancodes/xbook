@@ -1,21 +1,17 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/UserModel.js';
 
-
 const protectRoute = async (req, res, next) => {
+    const authHeader = req.headers.authorization;
 
-
-    // get token from headers
-    const token = req.headers("Authorization").replace('Bearer ', ''); // Assuming the token is sent as a Bearer token in the Authorization header
-
-    if (!token) {
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res.status(401).json({ message: 'No authentication token, access denied' });
     }
 
+    const token = authHeader.split(' ')[1];
+
     try {
-        // Verify the token
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        // find user by id
         const user = await User.findById(decoded.userId).select('-password');
 
         if (!user) {
@@ -28,6 +24,6 @@ const protectRoute = async (req, res, next) => {
         console.error('Error in auth middleware:', error);
         res.status(401).json({ error: 'Unauthorized, invalid token' });
     }
-}
+};
 
 export default protectRoute;
