@@ -1,9 +1,10 @@
 import express from 'express';
+import cookieParser from 'cookie-parser'
 import dotenv from 'dotenv';
 dotenv.config();
 
-import authRoutes from './routes/authRoutes.js';
-import bookRoutes from './routes/bookRoutes.js';
+import authRoutes from './routes/auth.routes.js';
+import bookRoutes from './routes/book.routes.js';
 import { connectDB } from './config/db.js';
 
 
@@ -13,6 +14,7 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json()); // Parse JSON bodies
+app.use(cookieParser());
 
 
 app.use("/api/auth", authRoutes);
