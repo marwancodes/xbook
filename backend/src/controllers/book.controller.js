@@ -3,7 +3,7 @@ import cloudinary from "../config/cloudinary.js";
 import { seedInitialBooks } from "../seeders/seedBooks.js";
 
 
-
+//**************** Create book Endpoint ******************/
 export const createBook = async (req, res) => {
     try {
         // get data from fields
@@ -35,7 +35,7 @@ export const createBook = async (req, res) => {
     }
 };
 
-//**************** Get all books + Pagination => infinite loading ******************/
+//**************** Get all books Endpoint + Pagination => infinite loading ******************/
 export const getAllBooks = async (req, res) => {
 	try {
         const page = req.query.page || 1; // Get the page number from query parameters, default to 1
@@ -70,7 +70,7 @@ export const getAllBooks = async (req, res) => {
 	}
 };
 
-//**************** Delete book ******************/
+//**************************** Delete book Endpoint ******************************/
 export const deleteBook = async (req, res) => {
     try {
         const book = await Book.findById(req.params.id);
@@ -89,9 +89,9 @@ export const deleteBook = async (req, res) => {
                 const publicId = book.image.split("/").pop().split(".")[0]; // get the thing after last slash in cloudinary URL
                 await cloudinary.uploader.destroy(publicId);
             } catch (deleteError) {
-                console.log("Error deleting the image from cloudinary", deleteError)
-            }
-        }
+                console.log("Error deleting the image from cloudinary", deleteError);
+            };
+        };
 
         await book.deleteOne();
 
@@ -100,10 +100,10 @@ export const deleteBook = async (req, res) => {
     } catch (error) {
         console.error("Error deleting book:", error);
 		res.status(500).json({ error: "Internal server error" });
-    }
+    };
 };
 
-//**************** Get user books ******************/
+//****************************** Get user books Endpoint ************************************/
 export const getUserBooks = async (req, res) => {
     try {
         const books = await Book.find({ user: req.userId }).sort({ createdAt: -1 });
@@ -111,5 +111,5 @@ export const getUserBooks = async (req, res) => {
     } catch (error) {
         console.error("Get user books error", error);
 		res.status(500).json({ error: "Server error" });
-    }
-}
+    };
+};
