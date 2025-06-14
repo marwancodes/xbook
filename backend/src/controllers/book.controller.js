@@ -70,7 +70,7 @@ export const getAllBooks = async (req, res) => {
 	}
 };
 
-
+//**************** Delete book ******************/
 export const deleteBook = async (req, res) => {
     try {
         const book = await Book.findById(req.params.id);
@@ -98,7 +98,18 @@ export const deleteBook = async (req, res) => {
         res.status(200).json({ seccuss: true, message: "Book deleted successfully" }); 
 
     } catch (error) {
-        console.error("Error fetching books:", error);
+        console.error("Error deleting book:", error);
 		res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+//**************** Get user books ******************/
+export const getUserBooks = async (req, res) => {
+    try {
+        const books = await Book.find({ user: req.userId }).sort({ createdAt: -1 });
+        res.status(200).json(books);
+    } catch (error) {
+        console.error("Get user books error", error);
+		res.status(500).json({ error: "Server error" });
     }
 }
