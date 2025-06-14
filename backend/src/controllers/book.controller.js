@@ -35,7 +35,7 @@ export const createBook = async (req, res) => {
     }
 };
 
-//**************** Get all books ******************/
+//**************** Get all books + Pagination => infinite loading ******************/
 export const getAllBooks = async (req, res) => {
 	try {
         const page = req.query.page || 1; // Get the page number from query parameters, default to 1
@@ -69,3 +69,36 @@ export const getAllBooks = async (req, res) => {
 		res.status(500).json({ error: "Internal server error" });
 	}
 };
+
+
+export const deleteBook = async (req, res) => {
+    try {
+        const book = await Book.findById(req.params.id);
+        if (!book) {
+            return res.status(404).json({ seccuss: false, message: "Book not found" });
+        };
+
+        // check if the user is the creator of the book
+        if (book.user.toString() !== req.userId.toString()) {
+            return res.status(401).json({ seccuss: false, message: "Unauthorized" }); 
+        };
+
+        // delete the image from cloudinary as well
+        if(book.image && book.image.includes("cloudinary")) {
+            try {
+                const publicId = book.image.split("/").pop().split(".")[0]; // get the thing after last slash in cloudinary URL
+                await cloudinary.uploader.destroy(publicId);
+            } catch (deleteError) {
+                console.log("Error deleting the image from cloudinary", deleteError)
+            }
+        }
+
+        await book.deleteOne();
+
+        res.status(200).json({ seccuss: true, message: "Book deleted successfully" }); 
+
+    } catch (error) {
+        console.error("Error fetching books:", error);
+		res.status(500).json({ error: "Internal server error" });
+    }
+}
