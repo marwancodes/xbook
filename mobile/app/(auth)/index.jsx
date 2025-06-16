@@ -1,6 +1,6 @@
 import { View, Image, Text, TextInput, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView, Platform } from 'react-native';
 import styles from "../../assets/styles/login.styles";
-import React,{ useState } from 'react';
+import { useState } from 'react';
 import COLORS from '../../constants/colors';
 import { Ionicons } from '@expo/vector-icons';
 import { Link } from 'expo-router';
@@ -18,7 +18,7 @@ const Login = () => {
   return (
     <KeyboardAvoidingView
         style={{flex: 1}}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior={Platform.OS === "ios" ? "padding" : "padding"}
     >
 
         <View style={styles.container}>
