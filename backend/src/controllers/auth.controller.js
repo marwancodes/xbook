@@ -9,9 +9,7 @@ export const registerUser = async (req, res) => {
     try {
         const { username, email, password } = req.body;
         console.log(req.body);
-        // Get random avatar
-        const profilePicture = `https://api.dicebear.com/7.x/avataaars/svg?seed=${username}`;
-        // const { data, statusCode } = await register({username, email, password, profilePicture});
+        
         if (!username || !email || !password) {
             return res.status(400).json({ success: false, message: 'All fields are required'});
         }
@@ -42,6 +40,9 @@ export const registerUser = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
+        // Get random avatar
+        const profilePicture = `https://api.dicebear.com/7.x/avataaars/svg?seed=${username}`;
+
         const newUser = new User({
             username,
             email,
@@ -51,11 +52,12 @@ export const registerUser = async (req, res) => {
 
         await newUser.save();
 
-        generateTokenAndSetCookie(res, newUser._id);
+        const token = generateTokenAndSetCookie(res, newUser._id);
 
         res.status(201).json({ 
             success: true, 
-            message: "User created successfully", 
+            message: "User created successfully",
+            token, // Include the token in the response
             user: {
                 ...newUser._doc, // Spread operator to include all user fields
                 password: undefined, // Exclude password from response
