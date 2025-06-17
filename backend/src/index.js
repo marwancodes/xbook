@@ -1,6 +1,7 @@
 import express from 'express';
 import cookieParser from 'cookie-parser'
 import cors from 'cors';
+import job from './config/cron.js';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -14,6 +15,7 @@ const PORT = process.env.PORT || 3000;
 
 
 // Middleware
+job.start(); // Start the cron job
 app.use(express.json()); // Parse JSON bodies
 app.use(cookieParser());
 app.use(cors());
