@@ -40,8 +40,8 @@ export const useAuthStore = create((set) => ({
                 isLoading: false,
             });
 
-            // console.log("User after signup: ", response.data.user);
-            // console.log("Token after: ", response.data.token);
+            console.log("User after signup: ", response.data.user);
+            console.log("Token after: ", response.data.token);
 
             return { success: true };
         } catch (error) {

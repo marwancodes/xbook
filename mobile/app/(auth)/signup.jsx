@@ -23,8 +23,8 @@ const Signup = () => {
             Alert.alert("Signup Error", result.error || "An error occurred during signup. Please try again.");
         }
 
-        console.log("User after signup:", useAuthStore.getState().user);
-        console.log("Token after signup:", useAuthStore.getState().token);
+        // console.log("User after signup:", useAuthStore.getState().user);
+        // console.log("Token after signup:", useAuthStore.getState().token);
     };
 
   return (
