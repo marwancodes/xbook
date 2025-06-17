@@ -17,14 +17,14 @@ const Signup = () => {
     const { user, isLoading, register, token } = useAuthStore();
 
     const handleSignup = async () => {
-        const result = register(username, email, password);
+        const result = await register(username, email, password);
 
         if (!result.success) {
             Alert.alert("Signup Error", result.error || "An error occurred during signup. Please try again.");
         }
 
-        console.log("User after signup:", user);
-        console.log("Token after signup:", token);
+        console.log("User after signup:", useAuthStore.getState().user);
+        console.log("Token after signup:", useAuthStore.getState().token);
     };
 
   return (

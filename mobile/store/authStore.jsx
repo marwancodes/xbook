@@ -17,7 +17,7 @@ export const useAuthStore = create((set) => ({
                 email,
                 password
             });
-            
+
             //* This is normal fetching */
             // const response = await fetch(`${API_URL}/register`, {
             //     method: 'POST',
@@ -27,9 +27,9 @@ export const useAuthStore = create((set) => ({
             //     body: JSON.stringify({ username, email, password }),
             // });
 
-            if (!response.ok) {
-                throw new Error(response.data.message || "Error signing up");
-            }
+            // if (!response.ok) {
+            //     throw new Error(response.data.message || "Error signing up");
+            // }
 
             await AsyncStorage.setItem('token', response.data.token);
             await AsyncStorage.setItem('user', JSON.stringify(response.data.user));
@@ -39,6 +39,10 @@ export const useAuthStore = create((set) => ({
                 token: response.data.token,
                 isLoading: false,
             });
+
+            // console.log("User after signup: ", response.data.user);
+            // console.log("Token after: ", response.data.token);
+
             return { success: true };
         } catch (error) {
             set({ error: error.response?.data?.message || error.message || "Error signing up", isLoading: false });
