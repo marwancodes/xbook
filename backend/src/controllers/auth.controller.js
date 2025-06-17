@@ -1,7 +1,7 @@
-import { generateTokenAndSetCookie } from "../utils/GenerateTokenAndSetCookie.js";
 import User from "../models/user.model.js";
 import validator from 'validator';
 import bcrypt from 'bcrypt';
+import { generateToken } from "../utils/GenerateToken.js";
 
 
 //*********************** Register Endpoint ******************************/
@@ -52,7 +52,7 @@ export const registerUser = async (req, res) => {
 
         await newUser.save();
 
-        const token = generateTokenAndSetCookie(res, newUser._id);
+        const token = generateToken(newUser._id);
 
         res.status(201).json({ 
             success: true, 
@@ -71,10 +71,10 @@ export const registerUser = async (req, res) => {
 }
 
 //*********************** Logout Endpoint ******************************/
-export const logout = async (req, res) => {
-    res.clearCookie("token");
-    res.status(200).json({ success: true, message: 'Logged out successfully' });
-};
+// export const logout = async (req, res) => {
+//     res.clearCookie("token");
+//     res.status(200).json({ success: true, message: 'Logged out successfully' });
+// };
 
 //*********************** Login Endpoint ******************************/
 export const loginUser = async (req, res) => {
@@ -96,13 +96,14 @@ export const loginUser = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Invalid email or password' });
         }
         
-        generateTokenAndSetCookie(res, user._id);
+        const token = generateToken(user._id);
 
         await user.save();
 
         res.status(200).json({ 
             success: true, 
             message: "Login successfully", 
+            token, // Include the token in the response
             user: {
                 ...user._doc, // Spread operator to include all user fields
                 password: undefined, // Exclude password from response
