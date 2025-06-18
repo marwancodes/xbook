@@ -9,7 +9,7 @@ const job = cron.schedule("*/14 * * * *", () => {
     https
         .get(process.env.API_URL, (res) => {
             if (res.statusCode === 200) {
-                consosle.log('GET request sent successfully');
+                console.log('GET request sent successfully');
             } else {
                 console.error(`GET request failed: ${res.statusCode}`);
             }

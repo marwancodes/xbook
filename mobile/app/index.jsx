@@ -1,9 +1,14 @@
 import { Link } from "expo-router";
 import { Text, View, StyleSheet } from "react-native";
+import { useAuthStore } from "../store/authStore"
 
 
 
 export default function Index() {
+
+  const { user, token } = useAuthStore();
+  console.log(user, token);
+
   return (
     <View style={styles.container} >
       <Text style={styles.text}>Welcome to England 123</Text>
