@@ -48,6 +48,25 @@ export const useAuthStore = create((set) => ({
             set({ error: error.response?.data?.message || error.message || "Error signing up", isLoading: false });
 			return { success: false, error: error.message || "Error signing up" };
         }
-    }
+    },
+
+    checkAuth: async () => {
+        set({ isLoading: true });
+        try {
+            const token = await AsyncStorage.getItem('token');
+            const userJson = await AsyncStorage.getItem('user');
+            const user = userJson ? JSON.parse(userJson) : null;
+
+            if (token && user) {
+                set({ user, token, isLoading: false });
+            } else {
+                set({ user: null, token: null, isLoading: false });
+            }
+
+            } catch (error) {
+            console.error("Auth check failed:", error);
+            set({ isLoading: false });
+        }
+    },
 
 }));
