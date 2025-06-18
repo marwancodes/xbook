@@ -7,7 +7,7 @@ import { useEffect } from "react";
 
 export default function Index() {
 
-  const { user, token, checkAuth } = useAuthStore();
+  const { user, token, checkAuth, logout } = useAuthStore();
   console.log(user, token);
 
   useEffect(() => {
@@ -19,6 +19,9 @@ export default function Index() {
       <Text style={styles.text}>Welcome {user?.username}</Text>
       <Text style={styles.text}>Token: {token}</Text>
 
+      <TouchableOpacity onPress={logout}>
+        <Text style={styles.text}>Logout</Text>
+      </TouchableOpacity>
       
       <Link href="/(auth)/signup" style={styles.text}>Signup</Link>
       <Link href="/(auth)" style={styles.text}>Login</Link>

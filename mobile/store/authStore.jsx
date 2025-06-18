@@ -69,4 +69,14 @@ export const useAuthStore = create((set) => ({
         }
     },
 
+    logout: async () => {
+        try {
+            await AsyncStorage.removeItem('token');
+            await AsyncStorage.removeItem('user');
+            set({ user: null, token: null });
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
+    },
+
 }));
