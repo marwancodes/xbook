@@ -1,9 +1,10 @@
-import { View, Image, Text, TextInput, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Image, Text, TextInput, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView, Platform, Alert} from 'react-native';
 import styles from "../../assets/styles/login.styles";
 import { useState } from 'react';
 import COLORS from '../../constants/colors';
 import { Ionicons } from '@expo/vector-icons';
 import { Link } from 'expo-router';
+import { useAuthStore } from '../../store/authStore';
 
 
 const Login = () => {
@@ -11,9 +12,14 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-
-    const handleLogin = () => {}
+    const { isLoading, login } = useAuthStore();
+    
+    const handleLogin = () => {
+        const result = login(email, password);
+        if (!result.success) {
+            Alert.alert("Login Error", result.error || "An error occurred during login. Please try again.");
+        }
+    }
 
   return (
     <KeyboardAvoidingView

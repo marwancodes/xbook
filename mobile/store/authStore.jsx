@@ -50,6 +50,33 @@ export const useAuthStore = create((set) => ({
         }
     },
 
+    login: async (email, password) => {
+        set({ isLoading: true });
+        try {
+            const response = await axios.post(`${API_URL}/login`, {
+                email,
+                password
+            });
+
+            await AsyncStorage.setItem('token', response.data.token);
+            await AsyncStorage.setItem('user', JSON.stringify(response.data.user));
+
+            set({
+                user: response.data.user,
+                token: response.data.token,
+                isLoading: false,
+            });
+
+            console.log("User after login: ", response.data.user);
+            console.log("Token after login: ", response.data.token);
+
+            return { success: true };
+        } catch (error) {
+            set({ error: error.response?.data?.message || error.message || "Error logging in", isLoading: false });
+            return { success: false, error: error.message || "Error logging in" };
+        }
+    },
+
     checkAuth: async () => {
         set({ isLoading: true });
         try {
